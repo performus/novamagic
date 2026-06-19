@@ -1,0 +1,55 @@
+.header {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  /* статичный — прокручивается вместе со страницей (не sticky) */
+  background: transparent;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 88px;
+}
+
+/* Логотип — по центру шапки (как в макете: x≈886 от 1920) */
+.logo {
+  grid-column: 2;
+  justify-self: center;
+}
+
+.logo img {
+  height: 24px;
+  width: auto;
+}
+
+/* Переключатель языка — справа */
+.lang {
+  grid-column: 3;
+  justify-self: end;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: var(--fs-small);          /* 16px */
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.32px;
+  color: rgba(16, 95, 34, 0.73);       /* green-ink @ 73% (из макета) */
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.lang:hover {
+  color: var(--green-ink);
+}
+
+@media (max-width: 767px) {
+  .inner {
+    min-height: 64px;
+  }
+
+  .logo img {
+    height: 20px;
+  }
+}

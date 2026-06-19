@@ -1,0 +1,81 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* Старт — БЕЖЕВЫЙ как сайт. В финале цвет перетекает #F7F2E7 → #105F22 (зелёная
+   штора «наступает»), затем слой уезжает вверх, открывая бежевый герой.
+   solid (а не gradient) — чтобы GSAP твинил backgroundColor. */
+.bg {
+  position: absolute;
+  inset: 0;
+  background-color: #f7f2e7;
+  will-change: transform, background-color;
+}
+
+.content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 3vw, 40px);
+  padding: clamp(24px, 6vw, 80px);
+}
+
+/* Окно с продуктом — фокусировка blur→0 */
+.window {
+  width: min(64vw, 320px);
+  aspect-ratio: 1080 / 1920;
+  border-radius: clamp(16px, 2vw, 28px);
+  overflow: hidden;
+  will-change: filter, opacity;
+}
+
+.windowImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Вордмарк NOVAMAGIC — инлайн SVG (вектор, резкий при любом scale). Цвет (зелёный↔
+   кремовый) задаёт GSAP через `color` (currentColor у заливок) — без растрового фильтра. */
+.wordmark {
+  display: block;
+  width: min(62vw, 520px);
+  height: auto;
+  color: #105f22; /* старт — зелёный как в герое */
+  will-change: transform, color, opacity;
+}
+
+/* Подзаголовок «dubai wind» — зелёный (читаемо на беже), scramble */
+.subhead {
+  margin: 0;
+  font-size: clamp(13px, 1.4vw, 18px);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.34em;
+  text-transform: lowercase;
+  color: rgba(16, 95, 34, 0.85);
+}
+
+/* Тонкая линия-прогресс снизу — зелёная на беже */
+.bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, rgba(16, 95, 34, 0.12), #105f22);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+@media (max-width: 767px) {
+  .wordmark {
+    width: min(82vw, 420px);
+  }
+}

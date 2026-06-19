@@ -1,0 +1,75 @@
+.footer {
+  width: 100%;
+  padding-block: clamp(40px, 6vw, 90px) clamp(28px, 4vw, 56px);
+}
+
+/* Гигантский вордмарк (узел 116:20) — во всю ширину */
+.wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 40px);
+  margin-top: clamp(24px, 3vw, 48px);
+}
+
+/* Реквизиты (узел 116:28, faint gold) */
+.reqs {
+  margin: 0;
+  font-size: var(--fs-small);
+  letter-spacing: 0.32px;
+  white-space: pre-wrap;
+  color: rgba(254, 215, 159, 0.42);
+}
+
+.actions {
+  display: flex;
+  gap: clamp(12px, 1vw, 20px);
+}
+
+/* Градиентная pill-кнопка маркетплейса (узел 116:25) */
+.orderBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px clamp(20px, 1.6vw, 28px);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to right, #1d4225 0%, #164521 50%, #0f6623 100%);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--fs-small);
+  letter-spacing: 0.32px;
+  white-space: nowrap;
+  transition: filter 0.2s ease;
+}
+
+.orderBtn:hover {
+  filter: brightness(1.12);
+  color: #fff;
+}
+
+/* ── Mobile: кнопки сверху (стек), реквизиты снизу по центру ── */
+@media (max-width: 767px) {
+  .bottom {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: clamp(20px, 5vw, 32px);
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .orderBtn {
+    width: 100%;
+    padding-block: 16px;
+  }
+
+  .reqs {
+    text-align: center;
+  }
+}

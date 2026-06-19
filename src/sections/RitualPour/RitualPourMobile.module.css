@@ -1,0 +1,120 @@
+/* 1. Заголовок + подзаголовок */
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(28px, 8vw, 56px) clamp(18px, 6vw, 32px) clamp(16px, 5vw, 28px);
+}
+
+.heading {
+  text-align: center;
+  max-width: 520px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(26px, 7vw, 40px);
+  font-weight: var(--fw-semibold);
+  line-height: 1.15;
+  color: var(--green-ink);
+}
+
+.subtitle {
+  margin: clamp(8px, 2vw, 14px) 0 0;
+  font-size: var(--fs-small);
+  font-weight: var(--fw-regular);
+  line-height: 1.5;
+  color: rgba(16, 95, 34, 0.7);
+}
+
+/* 2. Сцена: пролив СВЕРХУ льёт на плашку. Под сценой — футер встык (без margin-bottom).
+   overflow:hidden — дно бутылки чисто обрезается за правым краем экрана. */
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Пролив — якорь к ПРАВОМУ краю (дно за экраном), над плашкой; струя уходит ЗА верх плашки */
+.pour {
+  position: relative;
+  z-index: 1; /* НИЖЕ плашки — струя уходит ЗА её верхний край (прячется), не по лицу */
+  display: flex;
+  justify-content: flex-end; /* бутылка к правому краю */
+  width: 100%;
+  margin-top: clamp(24px, 8vw, 56px); /* воздух между подзаголовком и бутылкой */
+  /* плашка заходит под низ пролива, но с ВОЗДУХОМ (меньше нахлёст — носик не касается) */
+  margin-bottom: clamp(-96px, -20vw, -56px);
+}
+
+.pourBox {
+  position: relative;
+  /* крупная, шире вьюпорта — дно уходит за правый край (margin-right отрицательный) */
+  width: clamp(420px, 130vw, 560px);
+  aspect-ratio: 1664 / 1248;
+  margin-right: clamp(-180px, -36vw, -90px);
+  /* приподнята — воздух между бутылкой и верхом плашки */
+  transform: translateY(clamp(-56px, -12vw, -28px));
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Плашка — премиальный фотофон (мох/коряга); чипсы + формула. Поверх пролива (z2) —
+   струя прячется за её верхним краем. */
+.card {
+  position: relative;
+  z-index: 2;
+  width: min(84vw, 390px);
+  aspect-ratio: 664 / 961;
+  border-radius: clamp(28px, 9vw, 52px);
+  overflow: clip;
+  background: #1d2a1c;
+}
+
+.cardBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Вектор-вордмарк NOVAMAGIC / dubai wind сверху плашки (Figma 139:50, золото/крем) */
+.wordmark {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 54%;
+  height: auto;
+  z-index: 1;
+}
+
+.pill {
+  position: absolute;
+}
+
+.card .pill {
+  font-size: clamp(13px, 3.6vw, 17px);
+}
+
+/* состав — внизу плашки слева, светлый текст */
+.formula {
+  position: absolute;
+  left: 9%;
+  bottom: 4%;
+  width: 78%;
+  margin: 0;
+  font-size: clamp(11px, 3vw, 15px);
+  font-weight: var(--fw-regular);
+  line-height: 1.5;
+  text-align: left;
+  color: rgba(232, 228, 214, 0.82);
+}

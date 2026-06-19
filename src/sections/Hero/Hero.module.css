@@ -1,0 +1,108 @@
+/* Hero-контент внутри пин-секции (.content из HeroBottleSequence, 100vh) */
+.hero {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(18px, 3vh, 44px) clamp(20px, 3vw, 59px);
+}
+
+/* Гигантский вордмарк во всю ширину (узел 114:4) */
+.wordmark {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* «dubai wind» — левый край ВРОВЕНЬ с началом NOVAMAGIC (вордмарк full-width, левый
+   край = padding героя). Бутылка по центру-право больше не перекрывает подпись. */
+.dubaiWind {
+  display: block;
+  width: clamp(220px, 24vw, 465px);
+  height: auto;
+  margin: clamp(6px, 1vh, 16px) 0 0;
+}
+
+/* Нижняя «сцена»: слева лид, справа заявление, по центру — бутылка-canvas */
+.stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(16px, 3vw, 60px);
+}
+
+/* Левая колонка — лид + CTA (узлы 114:27, 114:63/64) */
+.lead {
+  min-width: 0;
+  max-width: 420px;
+}
+
+.leadText {
+  margin-bottom: clamp(20px, 2vw, 32px);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: 1.5;
+  color: rgba(16, 95, 34, 0.7);
+}
+
+/* Правая колонка — крупное заявление (узел 114:29) */
+.statement {
+  min-width: 0;
+  font-size: clamp(28px, 2.7vw, 52px);
+  font-weight: var(--fw-medium);
+  line-height: 1.09;
+  color: var(--green-ink);
+}
+
+.statement p {
+  margin: 0;
+}
+
+/* Intro-слой (B2): стеклянная карточка СЛЕВА (бутылка уезжает вправо) */
+.introCard {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: var(--bg-cream) !important; /* цвет фона страницы вместо glass */
+  border: 1.5px solid var(--green-ink) !important; /* зелёная обводка */
+  width: auto;
+  max-width: clamp(420px, 50vw, 920px);
+  min-height: clamp(200px, 22vw, 380px);
+  padding: clamp(28px, 3.5vw, 64px) clamp(28px, 4vw, 72px);
+}
+
+.introStatement {
+  max-width: none;
+  margin: 0;
+  font-size: clamp(24px, 2.7vw, 48px);
+  font-weight: var(--fw-semibold);
+  line-height: 1.2;
+  text-align: left;
+  color: var(--green-ink);
+}
+
+/* ── Mobile: лид и заявление прижаты к низу по центру, бутылка над ними ── */
+@media (max-width: 767px) {
+  .dubaiWind {
+    width: clamp(180px, 50vw, 280px);
+  }
+
+  .stage {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+    gap: clamp(16px, 4vw, 28px);
+    padding-bottom: clamp(12px, 4vh, 40px);
+    text-align: center;
+  }
+
+  .lead {
+    max-width: none;
+  }
+
+  .statement {
+    font-size: clamp(22px, 6vw, 34px);
+  }
+}

@@ -1,0 +1,11 @@
+/* Матовое стекло из макета (узел 116:35 и карточки пирамиды).
+   Значения — токены --glass-* (SPEC §4). */
+.card {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  overflow: clip;
+}

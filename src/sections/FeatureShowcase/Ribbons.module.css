@@ -1,0 +1,34 @@
+/* Фоновый слой ленты-змейки — ПОД контентом; рисование гонит родитель (scrub) */
+.ribbons {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.line {
+  fill: none;
+  stroke: #ffffff; /* белые полосы */
+  stroke-linecap: butt; /* обрезанные (квадратные) концы */
+  stroke-linejoin: miter;
+  filter: none; /* без блюра */
+  will-change: stroke-dashoffset;
+}
+
+/* Крупные толстые белые ленты на разной «глубине» (толщина ×3) */
+.l0 {
+  stroke-width: 45;
+  opacity: 0.5;
+}
+
+.l1 {
+  stroke-width: 30;
+  opacity: 0.38;
+}

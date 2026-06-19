@@ -1,0 +1,116 @@
+.wrap {
+  position: relative;
+  height: 320vh;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Заголовок сверху, статичный, поверх карточек (z2) */
+.heading {
+  position: absolute;
+  top: 8%;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  text-align: center;
+  padding-inline: clamp(20px, 5vw, 120px);
+  pointer-events: none;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(30px, 4.6vw, 72px);
+  font-weight: var(--fw-semibold);
+  line-height: 1; /* 100% — плотные строки */
+  color: var(--green-ink);
+}
+
+.subtitle {
+  max-width: 870px;
+  margin: clamp(12px, 1.5vw, 20px) auto 0;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: 1.5;
+  color: rgba(16, 95, 34, 0.7);
+}
+
+/* Сцена карточек (ниже заголовка по z) */
+.stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Карточка-нота: БЕЗ рамки/фона — крупная картинка сверху по центру, текст под ней
+   по центру (как в мобильном примере). Позицию/поворот/масштаб задаёт gsap (по дуге). */
+.note {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: clamp(360px, 28vw, 560px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(6px, 0.8vw, 14px);
+  background: transparent;
+  border: none;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Кластер фото-ингредиентов — КРУПНЫЙ, по центру (прозрачные PNG; aspect-ratio инлайн) */
+.cluster {
+  position: relative;
+  width: clamp(290px, 26vw, 510px); /* ~1.2× — крупнее (420 → 510) */
+  margin: 0 auto;
+}
+
+.clusterImg {
+  position: absolute;
+  height: auto;
+}
+
+.text {
+  margin-top: clamp(10px, 1.2vw, 18px);
+  text-align: center;
+}
+
+/* Метка категории (узлы 114:58/59/60) */
+.category {
+  display: block;
+  font-size: clamp(14px, 1.3vw, 24px);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(16, 95, 34, 0.7);
+}
+
+/* Список ингредиентов (узлы 114:31/32/33) */
+.notes {
+  margin-top: calc(var(--space) * 0.75);
+  font-size: clamp(18px, 1.7vw, 34px);
+  font-weight: var(--fw-regular);
+  line-height: 1.2;
+  color: var(--green-ink);
+}
+
+@media (max-width: 767px) {
+  /* воздух после hero-бутылки перед блоком нот — заголовок не прижат к бутылке */
+  .wrap {
+    margin-top: clamp(48px, 14vw, 96px);
+  }
+
+  .note {
+    width: min(64vw, 300px);
+  }
+
+  .title {
+    font-size: clamp(28px, 8vw, 44px);
+  }
+}

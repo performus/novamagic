@@ -1,0 +1,149 @@
+/* Длина прокрутки подрезана: после ухода бутылки (0.8→1) нет пустого хвоста —
+   следующий блок входит внахлёст с уходом плашки/бутылки */
+.wrap {
+  position: relative;
+  height: 300vh;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Шапка (заголовок + подзаголовок) сверху, поверх всего; тает по скроллу */
+.header {
+  position: absolute;
+  top: clamp(36px, 8vh, 96px);
+  left: 0;
+  right: 0;
+  z-index: 3;
+  padding-inline: clamp(20px, 5vw, 120px);
+  text-align: center;
+  will-change: opacity;
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(26px, 4.2vw, 64px);
+  font-weight: var(--fw-semibold);
+  line-height: 1.15;
+  color: var(--green-ink);
+}
+
+/* Подзаголовок «NOVAMAGIC работает как…» (перенесён из блока 3-в-1) */
+.subhead {
+  max-width: 640px;
+  margin: clamp(10px, 1.5vw, 20px) auto 0;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: 1.5;
+  color: rgba(16, 95, 34, 0.7);
+}
+
+.subhead span {
+  display: block;
+}
+
+/* Бутылка ПОВЕРХ плашек, по центру (grid), зум от gsap на canvas */
+.canvasWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.canvasBox {
+  position: relative;
+  height: min(80vh, 720px, 86vw * 16 / 9);
+  aspect-ratio: 1080 / 1920;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Плашки ПОД бутылкой */
+.cards {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.card {
+  position: absolute;
+  top: 50%;
+  width: clamp(320px, 30vw, 560px); /* ~треть ширины экрана, растёт на 27" */
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Подложка ~квадрат: бежевая заливка #F7F2E7, без тени/свечения */
+.glass {
+  position: relative;
+  aspect-ratio: 1;
+  background: #f7f2e7;
+  border-radius: 18px;
+  overflow: clip;
+}
+
+/* Рендер из Figma — оверлей НАД плашкой (sibling, не клипится), якорь к ВЕРХ-ПРАВОМУ
+   углу (inline right/top/width). Зум — инлайн per-card (transform: scale), от верх-правого
+   угла → висит сверху-справа, тело над плашкой, вылет за правую кромку. Не обрезается. */
+.render {
+  position: absolute;
+  height: auto;
+  pointer-events: none;
+  transform-origin: 100% 0%;
+}
+
+/* Подпись внутри карточки снизу (узлы 114:36/39/37/28) */
+.label {
+  position: absolute;
+  left: clamp(16px, 1.6vw, 26px);
+  right: clamp(16px, 1.6vw, 26px);
+  bottom: clamp(16px, 1.6vw, 26px);
+  margin: 0;
+  font-size: clamp(22px, 1.8vw, 36px);
+  font-weight: var(--fw-semibold);
+  line-height: 1.15;
+  color: var(--green-ink);
+}
+
+.left {
+  left: clamp(20px, 5vw, 130px);
+}
+
+.right {
+  right: clamp(20px, 5vw, 130px);
+}
+
+/* ── Mobile: плашки по центру (и ПОВЕРХ бутылки — читаемость на узком экране) ── */
+@media (max-width: 767px) {
+  .heading {
+    font-size: clamp(22px, 6vw, 34px);
+  }
+
+  /* на узком экране бутылка по центру перекрыла бы плашки — поднимаем их над ней */
+  .cards {
+    z-index: 3;
+  }
+
+  .card {
+    width: min(72vw, 300px);
+  }
+
+  .left,
+  .right {
+    left: 50%;
+    right: auto;
+    margin-left: max(-36vw, -150px);
+  }
+}

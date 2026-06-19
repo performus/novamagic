@@ -1,0 +1,11 @@
+{
+  "frameCount": 121,
+  "pattern": "bottle_%04d.webp",
+  "firstIndex": 1,
+  "width": 1080,
+  "height": 1920,
+  "sourceFps": 24,
+  "alpha": true,
+  "loop": false,
+  "notes": "Hero bottle partial turntable, background removed (clean silhouette, no shadow). Transparent PNG. Scrub frame index by scroll progress; scroll down = forward, up = reverse. Bottle can overlap text/wordmark."
+}

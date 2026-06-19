@@ -1,0 +1,258 @@
+.closing {
+  position: relative;
+  z-index: 1; /* ниже пролива B7 (z-index 2) — струя заходит на верх футера */
+  width: 100%;
+  /* без нижнего отступа — панель упирается в конец страницы */
+  padding-block: clamp(40px, 6vw, 100px) 0;
+}
+
+/* десктоп: меньше прозрачного отступа над панелью — футер ближе к проливу (мобилку не трогаем) */
+@media (min-width: 768px) {
+  .closing {
+    padding-block: clamp(8px, 1.2vw, 22px) 0;
+  }
+}
+
+/* Чёрная скруглённая панель (узел 139:138) */
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(620px, 50vw, 920px);
+  padding: clamp(28px, 3vw, 64px) clamp(24px, 3vw, 60px);
+  background: #06100a;
+  /* скругление только сверху; низ ровный — заканчивает страницу чёрным блоком */
+  border-radius: clamp(28px, 4vw, 72px) clamp(28px, 4vw, 72px) 0 0;
+  overflow: clip;
+}
+
+/* «dubai wind» — SVG-вектор (узел 141:139), еле заметное золото */
+.dubaiWind {
+  display: block;
+  width: clamp(150px, 14vw, 240px);
+  height: auto;
+  margin: 0 auto;
+}
+
+/* Заголовки — золото #f2bb7a (узлы 139:128 / 139:127) */
+.headline {
+  position: relative;
+  z-index: 3;
+  margin-top: clamp(12px, 1.5vw, 28px);
+}
+
+.line1,
+.line2 {
+  margin: 0;
+  font-size: clamp(26px, 4.2vw, 68px);
+  font-weight: var(--fw-medium);
+  line-height: 1.12;
+  color: #f2bb7a;
+}
+
+.line2 {
+  text-align: right;
+}
+
+/* Десктоп: заголовки по ширине текста (для замера и раздвижки translateX) */
+@media (min-width: 768px) {
+  .line1,
+  .line2 {
+    width: fit-content;
+    will-change: transform;
+  }
+
+  .line2 {
+    margin-left: auto; /* правый текст у правого края (финал) */
+  }
+}
+
+/* Сцена: вордмарк (внизу, тёмно-зелёный) + рендер бутылки (по центру) */
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: clamp(280px, 34vw, 540px);
+}
+
+.wordmark {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+  height: auto;
+}
+
+/* Рендер бутылки — упирается в низ панели (как в макете) */
+.bottle {
+  position: absolute;
+  left: 56%;
+  bottom: 0;
+  transform: translateX(-50%);
+  z-index: 2;
+  height: clamp(380px, 50vw, 820px);
+  width: auto;
+}
+
+/* Нижний ряд: реквизиты слева, кнопки справа */
+.bottom {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(20px, 3vw, 40px);
+  margin-top: clamp(20px, 2vw, 36px);
+}
+
+.reqs {
+  margin: 0;
+  font-size: var(--fs-small);
+  letter-spacing: 0.32px;
+  white-space: pre-wrap;
+  color: rgba(254, 215, 159, 0.42);
+}
+
+.actions {
+  display: flex;
+  gap: clamp(12px, 1vw, 20px);
+}
+
+/* Кнопка маркетплейса (узел 139:129): зелёный градиент + золотой текст + стрелка-кружок */
+.orderBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1vw, 16px);
+  padding: 6px 6px 6px clamp(18px, 1.6vw, 26px);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(to right, #1d4225 0%, #164521 50%, #0f6623 100%);
+  color: rgba(254, 215, 159, 0.85);
+  font-size: var(--fs-small);
+  letter-spacing: 0.32px;
+  white-space: nowrap;
+  transition: filter 0.2s ease;
+}
+
+.orderBtn:hover {
+  filter: brightness(1.12);
+}
+
+/* Золотая стрелка-кружок (узлы 139:134/136) */
+.arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #c0a889 0%, #a58664 100%);
+  color: #06100a;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* ── Mobile (≤767px): та же тёмная панель, вертикальный стек без наложений ──
+   Порядок (flex order): вордмарк → dubai wind → заголовок → КНОПКИ → бутылка → реквизиты.
+   Абсолютные элементы (вордмарк, бутылка) переводятся в поток. */
+@media (max-width: 767px) {
+  .panel {
+    align-items: center;
+    text-align: center;
+    gap: clamp(14px, 4vw, 24px);
+    /* низ 0 — бутылка встык к нижнему краю экрана */
+    padding: clamp(26px, 7vw, 44px) clamp(20px, 6vw, 32px) 0;
+  }
+
+  /* 1. Вордмарк NOVAMAGIC сверху (из .stage в поток) */
+  .stage {
+    order: 1;
+    flex: none;
+    min-height: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .wordmark {
+    position: static;
+    width: min(78vw, 360px);
+  }
+
+  /* 2. dubai wind */
+  .dubaiWind {
+    order: 2;
+    margin: 0 auto;
+  }
+
+  /* 3. Заголовок + подзаголовок, по центру */
+  .headline {
+    order: 3;
+    margin-top: clamp(4px, 2vw, 12px);
+  }
+
+  .line1 {
+    font-size: clamp(26px, 7.4vw, 40px);
+  }
+
+  .line2 {
+    margin-top: clamp(6px, 2vw, 12px);
+    font-size: clamp(17px, 4.6vw, 24px);
+    line-height: 1.3;
+    text-align: center;
+    color: rgba(254, 215, 159, 0.72);
+  }
+
+  /* .bottom раскрывается (display:contents): кнопки и реквизиты становятся
+     прямыми flex-детьми .panel — можно развести их по разные стороны бутылки */
+  .bottom {
+    display: contents;
+  }
+
+  /* 4. Кнопки в столбик — ПЕРЕД бутылкой */
+  .actions {
+    order: 4;
+    flex-direction: column;
+    width: 100%;
+    gap: clamp(12px, 3vw, 18px);
+    margin-top: clamp(16px, 5vw, 28px);
+  }
+
+  .orderBtn {
+    justify-content: space-between;
+    width: 100%;
+    padding-block: 8px;
+    font-size: var(--fs-body);
+  }
+
+  /* 5. Бутылка — width-based (height:auto) → пропорции не плывут; встык к низу экрана */
+  .bottle {
+    order: 5;
+    position: static;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    width: min(84vw, 360px);
+    height: auto;
+    max-width: none;
+    object-fit: contain;
+    margin: clamp(10px, 3vw, 20px) auto 0; /* без нижнего margin — низ к краю */
+  }
+
+  /* 6. Реквизиты — ПОВЕРХ бутылки внизу (absolute, z выше), с тёмной подложкой */
+  .reqs {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(12px, 4vw, 22px);
+    transform: translateX(-50%);
+    z-index: 5;
+    margin: 0;
+    padding: 5px 16px;
+    text-align: center;
+    background: rgba(6, 16, 10, 0.5);
+    border-radius: var(--radius-pill);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.9);
+  }
+}

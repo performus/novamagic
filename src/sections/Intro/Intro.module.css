@@ -1,0 +1,26 @@
+.intro {
+  width: 100%;
+  padding-block: clamp(48px, 7vw, 110px);
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-cream) !important; /* цвет фона страницы вместо glass */
+  border: 1.5px solid var(--green-ink) !important; /* зелёная обводка */
+  /* пропорции карточки из макета: 1678×490 ≈ паддинги ниже */
+  min-height: clamp(260px, 25vw, 460px);
+  padding: clamp(40px, 5vw, 80px) clamp(28px, 7vw, 110px);
+}
+
+/* Крупное центрированное заявление (узел 114:62, 72px semibold) */
+.statement {
+  max-width: 1467px;
+  margin: 0;
+  font-size: clamp(28px, 4.6vw, 72px);
+  font-weight: var(--fw-semibold);
+  line-height: 1.15;
+  text-align: center;
+  color: var(--green-ink);
+}

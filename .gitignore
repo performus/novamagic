@@ -1,0 +1,35 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Env / secrets
+.env
+.env.*
+
+# Vercel
+.vercel
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Рабочая папка Арта (исходники/сырьё секвенций ~11M) — для билда не нужна.
+# Если хочешь версионировать — закомментируй строку ниже.
+Docs/
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.tmp/

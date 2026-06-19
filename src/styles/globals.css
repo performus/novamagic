@@ -1,0 +1,62 @@
+/* Глобальные базовые стили страницы (SPEC §4, §7 каркаса) */
+
+body {
+  background-color: var(--bg-cream);
+  color: var(--green-label);
+  font-family: var(--font);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-head);
+  color: var(--green-ink);
+}
+
+/* Entrance-reveals (Фаза 2): начальное скрытое состояние.
+   При prefers-reduced-motion контент виден сразу (без зависимости от JS). */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Кнопки: ПЕРИОДИЧЕСКИЙ горизонтальный градиент, шире кнопки (200%). Статично —
+   как обычный тёмно-зелёный → зелёный градиент. На hover/focus — оооочень мягкая
+   бесконечная волна слева направо (период 200% = ровно один цикл, шов незаметен). */
+.btn-flow {
+  background-image: linear-gradient(90deg, #0e4a1c, #1e7a34, #0e4a1c);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+}
+
+@keyframes btnFlow {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+.btn-flow:hover,
+.btn-flow:focus-visible {
+  animation: btnFlow 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-flow:hover,
+  .btn-flow:focus-visible {
+    animation: none;
+  }
+}

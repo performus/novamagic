@@ -1,0 +1,70 @@
+.heroMobile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(24px, 9vw, 56px) clamp(16px, 5vw, 28px) clamp(16px, 5vw, 32px);
+  gap: clamp(14px, 4vw, 22px);
+}
+
+/* Вордмарк NOVAMAGIC — крупно, сверху по центру (узел 114:4) */
+.wordmark {
+  display: block;
+  width: min(90vw, 440px);
+  height: auto;
+}
+
+/* «dubai wind» под вордмарком (узел 116:40) */
+.dubaiWind {
+  display: block;
+  width: min(46vw, 220px);
+  height: auto;
+  margin-top: clamp(-4px, -0.5vw, 0px);
+}
+
+/* Подзаголовок (узел 114:27) */
+.lead {
+  max-width: 520px;
+  margin: clamp(2px, 1vw, 8px) 0 0;
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: 1.5;
+  color: rgba(16, 95, 34, 0.7);
+}
+
+/* Кнопки заказа — столбиком, удобной ширины */
+.cta {
+  width: min(82vw, 380px);
+}
+
+/* Бутылка по центру с лёгким покачиванием */
+.bottleWrap {
+  width: min(74vw, 360px);
+  margin-top: clamp(16px, 5vw, 36px);
+}
+
+.bottle {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1080 / 1920; /* портрет — без искажения */
+  object-fit: contain;
+  transform-origin: 50% 70%; /* качается вокруг низа-центра */
+  animation: sway 5s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bottle {
+    animation: none;
+  }
+}

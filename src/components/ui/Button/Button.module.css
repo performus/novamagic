@@ -1,0 +1,25 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 48px;
+  border: none;
+  border-radius: var(--radius-pill);
+  /* периодический градиент-фон задаёт глобальный .btn-flow (волна на hover) */
+  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font);
+  font-size: var(--fs-small);          /* 16px */
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.32px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.button:hover {
+  color: #fff;
+}
+
+.button:active {
+  transform: translateY(1px);
+}

@@ -1,0 +1,16 @@
+/* Стеклянная пилюля-характеристика (узел 114:84). Светлый текст. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: clamp(8px, 1vw, 13px) clamp(16px, 1.8vw, 28px);
+  border-radius: var(--radius);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  color: #fff8ef;
+  font-size: clamp(13px, 1.2vw, 20px);
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}

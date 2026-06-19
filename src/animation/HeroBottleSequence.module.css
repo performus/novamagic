@@ -1,0 +1,68 @@
+/* Длина прокрутки = оборот бутылки + оба перехода текста (подстраивается) */
+.wrap {
+  position: relative;
+  height: 300vh;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Слой hero-текста: заполняет экран (вордмарк сверху), уезжает вверх и тает */
+.heroText {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  will-change: transform, opacity;
+}
+
+/* Слой текста B2 (z-index 3): СЛЕВА (бутылка уезжает вправо), въезжает слева */
+.introText {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: clamp(40px, 6vw, 110px) clamp(20px, 5vw, 120px);
+  opacity: 0;
+  /* слой текста B2 (inset:0, z3) перекрывал hero-CTA и съедал клики/ховер —
+     события проходят насквозь к кнопкам под ним (интерактива внутри нет) */
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Обёртка центрирует бутылку (grid), наклон от gsap живёт на самом canvas */
+.canvasWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+/* Бокс с фиксированным соотношением кадра 9:16. Высота ведущая, но ограничена
+   так, чтобы производная ширина (= height * 9/16) не вылезала за 86vw на узких
+   экранах. aspect-ratio на div'е надёжен; canvas внутри — absolute, чтобы не
+   создавать циклическую зависимость размеров. */
+.canvasBox {
+  position: relative;
+  /* потолок поднят для широких экранов (27"+); ширина всё ещё ограничена 86vw,
+     чтобы на узких десктопах бутылка не лезла на текст слева/справа */
+  height: min(clamp(560px, 78vh, 1100px), 86vw * 16 / 9);
+  aspect-ratio: 1080 / 1920;
+}
+
+/* Canvas заполняет бокс — соотношение задаёт бокс, искажения нет.
+   Наклон от gsap (rotation) живёт на самом canvas. */
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
