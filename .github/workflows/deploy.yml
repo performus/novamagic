@@ -3,7 +3,7 @@ name: Deploy NOVAMAGIC to Yandex Object Storage
 on:
   push:
     branches: [main]
-  workflow_dispatch:   # можно запускать вручную из вкладки Actions
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -24,13 +24,9 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload dist to Object Storage
-        uses: povsister/[email protected]
-        with:
-          aws_key_id:     ${{ secrets.YC_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.YC_SECRET_ACCESS_KEY }}
-          aws_bucket:     ${{ secrets.YC_BUCKET }}
-          endpoint:       https://storage.yandexcloud.net
-          source_dir:     dist
-          destination_dir: ''
-          delete_removed: true     # удаляет в бакете то, чего больше нет в dist
+      - name: Deploy to Yandex Object Storage
+        run: aws s3 sync dist/ s3://${{ secrets.YC_BUCKET }}/ --delete --endpoint-url=https://storage.yandexcloud.net
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.YC_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ru-central1
