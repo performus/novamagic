@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, type RefObject } from 'react'
-import { freeSequence, getFrame, loadSequence } from './bottleFrames'
+import { acquireSequence, getFrame, loadSequence, releaseSequence, type LoadOpts } from './bottleFrames'
 
 export interface BottleCanvasOpts {
   naturalW: number
@@ -11,9 +11,10 @@ export interface BottleCanvasOpts {
 /**
  * Рисует кадры секвенции на canvas: contain-fit, dpr-резкость, размер по offset.
  * Кадры — даунскейленные ImageBitmap из общего загрузчика (декод вне главного потока).
- * Секвенция грузится ЛЕНИВО (когда блок близко к вьюпорту) и освобождается, когда блок
- * ушёл далеко. На скролле — только дешёвый drawImage; перерисовка одного кадра
- * коалесцируется в один requestAnimationFrame. Возвращает setFrame(index).
+ * Секвенция грузится ЛЕНИВО при подходе блока к вьюпорту и освобождается (рефкаунтом),
+ * когда её не смотрит ни один блок. На скролле — только дешёвый drawImage; перерисовка
+ * коалесцируется в один requestAnimationFrame; на промахе кадра — догрузка (self-heal).
+ * Возвращает setFrame(index).
  */
 export function useBottleCanvas(
   canvasRef: RefObject<HTMLCanvasElement | null>,
@@ -32,10 +33,26 @@ export function useBottleCanvas(
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
+    const scheduleDraw = () => {
+      if (pending.current) return
+      pending.current = true
+      requestAnimationFrame(() => drawRef.current())
+    }
+
+    // reduce: статичный кадр — грузим лишь ~5 кадров (включая средний показываемый);
+    // мобилка: каждый 2-й кадр + меньше битмап; десктоп: все кадры
+    const step = reduce ? Math.max(1, Math.floor(frameCount / 4)) : mobile ? 2 : 1
+    const maxEdge = mobile ? 540 : 860
+    const loadOpts: LoadOpts = { frameCount, naturalW, naturalH, step, maxEdge, onFrame: scheduleDraw }
+
     const draw = () => {
       pending.current = false
       const img = getFrame(base, cur.current)
-      if (!img) return
+      if (!img) {
+        // кадр ещё не доехал ИЛИ кэш освободили — догружаем (идемпотентно), onFrame перерисует
+        loadSequence(base, loadOpts)
+        return
+      }
       const cw = canvas.width
       const ch = canvas.height
       ctx.clearRect(0, 0, cw, ch)
@@ -61,43 +78,24 @@ export function useBottleCanvas(
       draw()
     }
 
-    // reduce: статичный кадр — грузим лишь ~5 кадров (включая средний показываемый);
-    // мобилка: каждый 2-й кадр + меньше битмап; десктоп: все кадры
-    const step = reduce ? Math.max(1, Math.floor(frameCount / 4)) : mobile ? 2 : 1
-    const maxEdge = mobile ? 540 : 860
-    const scheduleDraw = () => {
-      if (pending.current) return
-      pending.current = true
-      requestAnimationFrame(() => drawRef.current())
-    }
-    const startLoad = () =>
-      loadSequence(base, {
-        frameCount,
-        naturalW,
-        naturalH,
-        step,
-        maxEdge,
-        onFrame: scheduleDraw,
-      })
-
-    // ЛЕНИВАЯ загрузка: когда секция близко к вьюпорту; освобождение — когда ушла далеко
+    // ЛЕНИВО грузим, когда блок близко к вьюпорту; освобождение — рефкаунтом в загрузчике
+    // (только когда секвенцию не смотрит НИ ОДИН блок). viewing — был ли блок виден, чтобы
+    // НЕ слать release/free, если блок при загрузке страницы вообще не входил во вьюпорт.
     const section = canvas.closest('section') ?? (canvas.parentElement as HTMLElement)
-    let freeTimer = 0
+    let viewing = false
     const io = new IntersectionObserver(
       (entries) => {
         const e = entries[entries.length - 1]
         if (e.isIntersecting) {
-          if (freeTimer) {
-            clearTimeout(freeTimer)
-            freeTimer = 0
+          if (!viewing) {
+            viewing = true
+            acquireSequence(base, loadOpts)
+          } else {
+            loadSequence(base, loadOpts) // гарантируем onFrame/догрузку
           }
-          startLoad()
-        } else if (!freeTimer) {
-          // ушли далеко (за rootMargin) — освобождаем память с задержкой (без трэшинга)
-          freeTimer = window.setTimeout(() => {
-            freeSequence(base)
-            freeTimer = 0
-          }, 1500)
+        } else if (viewing) {
+          viewing = false
+          releaseSequence(base)
         }
       },
       { rootMargin: '150% 0px 150% 0px' },
@@ -109,7 +107,7 @@ export function useBottleCanvas(
 
     return () => {
       io.disconnect()
-      if (freeTimer) clearTimeout(freeTimer)
+      if (viewing) releaseSequence(base)
       window.removeEventListener('resize', resize)
     }
   }, [canvasRef, base, frameCount, naturalW, naturalH, mobile, reduce])

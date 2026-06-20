@@ -47,8 +47,10 @@ export function loadSequence(base: string, opts: LoadOpts): void {
   const step = opts.step ?? 1
   const maxEdge = opts.maxEdge ?? 860
   let c = caches.get(base)
-  if (c && !c.loading && c.count >= opts.frameCount && c.step === step) {
-    opts.onFrame?.()
+  // уже грузится ИЛИ загружено с тем же конфигом — не перезапускаем (идемпотентно,
+  // не плодим токены при повторных вызовах: acquire/перерисовка-на-промахе)
+  if (c && c.step === step && c.count >= opts.frameCount && (c.loading || c.frames.some(Boolean))) {
+    if (!c.loading) opts.onFrame?.()
     return
   }
   if (!c) {
@@ -120,6 +122,41 @@ export function freeSequence(base: string): void {
   c.token++ // отменяет in-flight воркеры
   for (const f of c.frames) f?.close()
   caches.delete(base)
+}
+
+// Рефкаунт активных потребителей по base: одну и ту же секвенцию (напр. SEQ_HERO в
+// hero И в FeatureShowcase) могут смотреть несколько блоков. Освобождаем ТОЛЬКО когда
+// её не смотрит НИ ОДИН блок — иначе один блок «съедал» кэш у другого (регрессия).
+const viewers = new Map<string, number>()
+const freeTimers = new Map<string, ReturnType<typeof setTimeout>>()
+
+/** Блок вошёл во вьюпорт: +1 зритель, отмена отложенного free, старт ленивой загрузки. */
+export function acquireSequence(base: string, opts: LoadOpts): void {
+  viewers.set(base, (viewers.get(base) ?? 0) + 1)
+  const t = freeTimers.get(base)
+  if (t) {
+    clearTimeout(t)
+    freeTimers.delete(base)
+  }
+  loadSequence(base, opts)
+}
+
+/** Блок ушёл далеко: −1 зритель; когда зрителей не осталось — отложенный free. */
+export function releaseSequence(base: string): void {
+  const n = (viewers.get(base) ?? 1) - 1
+  if (n > 0) {
+    viewers.set(base, n)
+    return
+  }
+  viewers.delete(base)
+  if (freeTimers.has(base)) return
+  freeTimers.set(
+    base,
+    setTimeout(() => {
+      freeTimers.delete(base)
+      if ((viewers.get(base) ?? 0) === 0) freeSequence(base)
+    }, 2000),
+  )
 }
 
 /** Манифест секвенции (public/sequences/<seq>/manifest.json). */
